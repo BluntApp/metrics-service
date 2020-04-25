@@ -1,0 +1,52 @@
+server:
+  port: 9006
+
+spring:
+  kafka:
+    #bootstrap-servers: http://${HOST_IP}:9092
+    bootstrap-servers: http://host.docker.internal:9092
+  sleuth:
+    messaging:
+      kafka:
+        enabled: true
+    sampler:
+      probability: 1.0
+  zipkin:
+    kafka:
+      topic: blunt-metrics
+    sender:
+      type: kafka
+  data:
+    mongodb:
+      uri: mongodb+srv://blunt:blunt@clusterblunt-ozeey.gcp.mongodb.net/metrics?retryWrites=true&w=majority
+  boot:
+    admin:
+      client:
+        # url: http://${HOST_IP}:9000
+        url: http://host.docker.internal:9000
+        instance:
+          health-url: http://host.docker.internal:9006/actuator/health
+          management-url: http://host.docker.internal:9006/actuator
+          service-url: http://host.docker.internal:9006
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  client:
+    config:
+      follow-service:
+        connectTimeout: 15000
+        readTimeout: 15000
+      onboard-service:
+        connectTimeout: 15000
+        readTimeout: 15000
+      publish-service:
+        connectTimeout: 15000
+        readTimeout: 15000
+
+logging:
+  file:
+    path: C:/Users/kpaulpa/Documents/workArea/TechnicalWork/logs/blunt-metrics-service
